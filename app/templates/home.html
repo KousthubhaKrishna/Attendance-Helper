@@ -1,0 +1,257 @@
+<link
+    rel="stylesheet"
+    href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css"
+    integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z"
+    crossorigin="anonymous"
+/>
+<script
+    src="https://code.jquery.com/jquery-3.5.1.slim.min.js"
+    integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj"
+    crossorigin="anonymous"
+></script>
+<script
+    src="https://cdn.jsdelivr.net/npm/popper.js@1.16.1/dist/umd/popper.min.js"
+    integrity="sha384-9/reFTGAW83EW2RDu2S0VKaIzap3H66lZH81PoYlFhbGU+6BZp6G7niu735Sk7lN"
+    crossorigin="anonymous"
+></script>
+<script
+    src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"
+    integrity="sha384-B4gt1jrGC7Jh4AgTPSdUtOBvfO8shuf57BaghqFfPlYxofvL8/KUEfYiJOMMV+rV"
+    crossorigin="anonymous"
+></script>
+
+<!--nav bar-->
+<nav class="navbar navbar-light" style="background-color: #333333; height: 12%">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-sm-2">
+                <img
+                    src="static/cbit.ico"
+                    width="100%"
+                    height="100%"
+                    class="d-inline-block align-top"
+                    alt=""
+                    style="margin-left: 0%"
+                />
+            </div>
+            <div class="col-sm-10" style="padding-left: 0">
+                <h4
+                    class="font-weight-bold"
+                    style="color: azure; margin-left: 5%; margin-top: 5%"
+                >
+                    Attendance Helper
+                </h4>
+            </div>
+        </div>
+    </div>
+</nav>
+
+<!--Body-->
+<!--Upload files and submit-->
+<div class="container-fluid">
+    <!--first row-->
+    <form action="/" method="POST" enctype="multipart/form-data">
+        <div
+            class="row"
+            style="margin-top: 8%; margin-left: 8%; margin-right: 8%"
+        >
+            <div class="col-sm-4">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <span
+                            class="input-group-text"
+                            style="background-color: #333333; color: cornsilk"
+                            id="inputGroupFileAddon01"
+                            >Upload</span
+                        >
+                    </div>
+                    <div class="custom-file">
+                        <input
+                            type="file"
+                            name="file"
+                            class="custom-file-input"
+                            id="inputGroupFile01"
+                            accept=".csv"
+                        />
+                        <label class="custom-file-label" for="inputGroupFile01"
+                            >Choose file</label
+                        >
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label
+                            class="input-group-text"
+                            style="background-color: #333333; color: cornsilk"
+                            for="inputGroupSelect01"
+                            >Year</label
+                        >
+                    </div>
+                    <select class="custom-select" name="year" id="inputGroupSelect01" required>
+                        <option selected value="" >Choose...</option>
+                        <option value="1">1</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                        <option value="4">4</option>
+                    </select>
+                </div>
+            </div>
+            <div class="col-sm-4">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label
+                            class="input-group-text"
+                            style="background-color: #333333; color: cornsilk"
+                            for="inputGroupSelect01"
+                            >Section</label
+                        >
+                    </div>
+                    <select class="custom-select" name="section" id="inputGroupSelect02" required>
+                        <option selected value="">Choose...</option>
+                        <option value="cse-1">CSE-1</option>
+                        <option value="cse-2">CSE-2</option>
+                        <option value="cse-3">CSE-3</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!--second row-->
+        <div class="row">
+            <div
+                class="col-sm-12 d-flex justify-content-center"
+                style="margin-top: 2%"
+            >
+                <div
+                    class="input-group-append"
+                    style="background-color: #d3d3d3"
+                >
+                    <button class="btn btn-outline-secondary" type="submit">
+                        Get Results
+                    </button>
+                </div>
+            </div>
+        </div>
+    </form>
+</div>
+<div class="container-fluid">
+    <!---third row-->
+    <div
+        class="row"
+        style="
+            margin-top: 2%;
+            margin-left: 12%;
+            margin-right: 8%;
+            margin-bottom: 8%;
+        "
+    >
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item">
+                <a
+                    class="nav-link active"
+                    id="present-tab"
+                    data-toggle="tab"
+                    href="#present"
+                    role="tab"
+                    aria-controls="present"
+                    aria-selected="true"
+                    >Present</a
+                >
+            </li>
+            <li class="nav-item">
+                <a
+                    class="nav-link"
+                    id="absent-tab"
+                    data-toggle="tab"
+                    href="#absent"
+                    role="tab"
+                    aria-controls="absent"
+                    aria-selected="false"
+                    >Absent</a
+                >
+            </li>
+            <li class="nav-item">
+                <a
+                    class="nav-link"
+                    id="guests-tab"
+                    data-toggle="tab"
+                    href="#guests"
+                    role="tab"
+                    aria-controls="guests"
+                    aria-selected="false"
+                    >Guests</a
+                >
+            </li>
+        </ul>
+        <div class="tab-content container" id="myTabContent">
+            <div
+                class="tab-pane fade show active"
+                id="present"
+                role="tabpanel"
+                aria-labelledby="present-tab"
+            >
+                <table class="table" style="margin-top: 2%">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Roll Number</th>
+                            <th scope="col">Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>160117733142</td>
+                            <td>Susmitha Chinthareddy</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div
+                class="tab-pane fade"
+                id="absent"
+                role="tabpanel"
+                aria-labelledby="absent-tab"
+            >
+                <table class="table" style="margin-top: 2%">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Absenties' Roll Number</th>
+                            <th scope="col">Name</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>160117733142</td>
+                            <td>Susmitha Chinthareddy</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <div
+                class="tab-pane fade"
+                id="guests"
+                role="tabpanel"
+                aria-labelledby="guests-tab"
+            >
+                <table class="table" style="margin-top: 2%">
+                    <thead class="thead-dark">
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Guest Logins</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <th scope="row">1</th>
+                            <td>160117733142</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
