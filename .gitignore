@@ -1,5 +1,6 @@
 #Dont commit .dotenv file
 .flaskenv
+.vscode/
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

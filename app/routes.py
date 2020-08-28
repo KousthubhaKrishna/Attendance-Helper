@@ -1,5 +1,5 @@
 from app import app                                     
-from flask import render_template,request,request,redirect,url_for
+from flask import render_template,request,request,redirect
 from .database.models import Student
 import codecs
 import pandas as pd
@@ -10,9 +10,12 @@ import time
 def home():
     if request.method == 'POST':
         try:
+
+            # Obtain the year and section selected and query for list of students
             section, year = request.form['section'], request.form['year']
             students_info = Student.objects(section=section,year=year)
 
+            #Load the uploaded file, save, read and delete after work 
             uploaded_file = request.files['file']
             if uploaded_file.filename != '':
                 file_url = app.config["UPLOAD_FOLDER"]+str(time.time())+uploaded_file.filename
@@ -20,13 +23,16 @@ def home():
                 att_data = pd.read_csv(codecs.open(file_url, 'rU', 'utf-16'),delimiter='\t')
                 os.remove(file_url)
             else:
-                return redirect("/")
+                return redirect("/", error="Please upload a file")
 
+            # Make a report by comparing data
             report = prepare_report(students_info,att_data)
-            return render_template("home.html",report=report)
+            return render_template("home.html", report=report)
+
+        # Any errors caused due to invalid data formats
         except:
             print("Invalid Files")
-            return redirect("/")
+            return render_template("home.html", report=report, error="Invalid file format")
     else:
         return render_template("home.html")
 
