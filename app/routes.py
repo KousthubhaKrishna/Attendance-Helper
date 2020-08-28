@@ -5,6 +5,7 @@ import codecs
 import pandas as pd
 import os
 import time
+import traceback
 
 @app.route("/", methods=['GET', 'POST'])
 def home():
@@ -40,6 +41,7 @@ def home():
         # Any errors caused due to invalid data formats
         except Exception as error:
             print("Invalid Files",error)
+            traceback.print_exc()
             return render_template("home.html", report=None, error="Invalid file format !")
     else:
         return render_template("home.html",report=None,error="")
