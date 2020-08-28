@@ -35,11 +35,11 @@ def home():
             total_sheet = report["total_sheet"]
             total_sheet.to_csv(file_download_url, index = False, header=True)
 
-            return render_template("home.html", report=report,error="",file_download_url=filename)
+            return render_template("home.html", report=report,error="",file_download_url=filename,)
 
         # Any errors caused due to invalid data formats
-        except:
-            print("Invalid Files")
+        except Exception as error:
+            print("Invalid Files",error)
             return render_template("home.html", report=None, error="Invalid file format !")
     else:
         return render_template("home.html",report=None,error="")
@@ -50,18 +50,23 @@ def prepare_report(students_info,att_data):
     present_data,absent_data,unknown_data = [],[],[]
 
     pc,ac = 1,1
-    labels = ['Sno','Roll','Name','Status']
-    total_sheet = pd.DataFrame(columns = labels)
+    total_sheet = []
+
+    i = 1
     for index, student in enumerate(students_info):
         roll, name = student.roll, student.name[:20]
         if( name in present_set ):
             present_data.append({ "sno":pc, "roll":roll,"name":name })
             present_set.remove(name)
             pc += 1
+            total_sheet.append([i,roll,name,1])
         else:
             absent_data.append({ "sno":ac, "roll":roll,"name":name})
             ac += 1
-
+            total_sheet.append([i,roll,name,0])
+        i += 1
+        
+    total_sheet = pd.DataFrame(total_sheet,columns=['Sno','Roll','Name','Status'])
     unknown_data = list(present_set)
     unknown_data = [{"sno":i+1,"name":unknown_data[i]} for i in range(len(unknown_data))]
     report = {
@@ -77,3 +82,24 @@ def prepare_report(students_info,att_data):
 def return_files_tut(filename):
     file_download_url = "static\\downloads\\"+filename
     return send_file(file_download_url, as_attachment=True, attachment_filename='')
+
+
+
+#Code to delete cached files regularly
+from datetime import datetime, timedelta
+from threading import Timer
+
+x=datetime.today()
+y = x.replace(day=x.day, hour=3, minute=0, second=0, microsecond=0) + timedelta(days=1)
+delta_t=y-x
+secs=delta_t.total_seconds()
+
+def deleteChachedFiles():
+    for file in os.listdir(app.config["DOWNLOADS_FOLDER"]):
+        fname = app.config["DOWNLOADS_FOLDER"]+str(file)
+        os.remove(fname)
+
+timer = Timer(secs, deleteChachedFiles)
+timer.start()
+
+#threading.Timer(86400.0, deleteChachedFiles).start()

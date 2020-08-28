@@ -59,11 +59,12 @@
 
 <!--Upload files and submit-->
 <div class="container-fluid">
+    <center><p style="margin-top:2%"> This tools extracts and gives you proper attendence from the Microsoft Teams attendance file. </p></center>
     <!--first row-->
     <form action="/" method="POST" enctype="multipart/form-data">
         <div
             class="row"
-            style="margin-top: 4%; margin-left: 8%; margin-right: 8%"
+            style="margin-top: 2%; margin-left: 8%; margin-right: 8%"
         >
             <div class="col-sm-4">
                 <div class="input-group mb-3">
@@ -166,6 +167,7 @@
                     >
                         Get Results
                     </button>
+                    {% if file_download_url %}
                     <a
                         class="btn"
                         href='downloads/{{ file_download_url }}'
@@ -177,8 +179,9 @@
                         "
                         type="submit"
                     >
-                        Download File
+                        Download Sheet
                     </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -319,3 +322,11 @@
         </div>
     </div>
 </div>
+
+<footer class="footer mytheme" style="padding:10px;position: relative;bottom: 0; width: 100%;">
+    <div class="container">
+      <center>
+          <p style="color:lightslategray; font-size: 14px;"> Made by : @susmitha @kousthubha </p>
+      </center>
+    </div>
+  </footer>
