@@ -20,8 +20,14 @@
     crossorigin="anonymous"
 ></script>
 
+<style>
+    .mytheme {
+        background-color: #343a40;
+    }
+</style>
+
 <!--nav bar-->
-<nav class="navbar navbar-light" style="background-color: #333333; height: 12%">
+<nav class="navbar navbar-light mytheme" style="height: 12%">
     <div class="container-fluid">
         <div class="row">
             <div class="col-sm-2">
@@ -47,20 +53,24 @@
 </nav>
 
 <!--Body-->
+{% if error %}
+<div class="alert alert-danger" role="alert">{{ error }}</div>
+{% endif %}
+
 <!--Upload files and submit-->
 <div class="container-fluid">
     <!--first row-->
     <form action="/" method="POST" enctype="multipart/form-data">
         <div
             class="row"
-            style="margin-top: 8%; margin-left: 8%; margin-right: 8%"
+            style="margin-top: 4%; margin-left: 8%; margin-right: 8%"
         >
             <div class="col-sm-4">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <span
-                            class="input-group-text"
-                            style="background-color: #333333; color: cornsilk"
+                            class="input-group-text mytheme"
+                            style="color: cornsilk"
                             id="inputGroupFileAddon01"
                             >Upload</span
                         >
@@ -77,20 +87,35 @@
                             >Choose file</label
                         >
                     </div>
+                    <script>
+                        // Add the following code if you want the name of the file appear on select
+                        $(".custom-file-input").on("change", function () {
+                            var fileName = $(this).val().split("\\").pop();
+                            $(this)
+                                .siblings(".custom-file-label")
+                                .addClass("selected")
+                                .html(fileName);
+                        });
+                    </script>
                 </div>
             </div>
             <div class="col-sm-4">
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <label
-                            class="input-group-text"
-                            style="background-color: #333333; color: cornsilk"
+                            class="input-group-text mytheme"
+                            style="color: cornsilk"
                             for="inputGroupSelect01"
                             >Year</label
                         >
                     </div>
-                    <select class="custom-select" name="year" id="inputGroupSelect01" required>
-                        <option selected value="" >Choose...</option>
+                    <select
+                        class="custom-select"
+                        name="year"
+                        id="inputGroupSelect01"
+                        required
+                    >
+                        <option selected value="">Choose...</option>
                         <option value="1">1</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
@@ -102,13 +127,18 @@
                 <div class="input-group mb-3">
                     <div class="input-group-prepend">
                         <label
-                            class="input-group-text"
-                            style="background-color: #333333; color: cornsilk"
+                            class="input-group-text mytheme"
+                            style="color: cornsilk"
                             for="inputGroupSelect01"
                             >Section</label
                         >
                     </div>
-                    <select class="custom-select" name="section" id="inputGroupSelect02" required>
+                    <select
+                        class="custom-select"
+                        name="section"
+                        id="inputGroupSelect02"
+                        required
+                    >
                         <option selected value="">Choose...</option>
                         <option value="cse-1">CSE-1</option>
                         <option value="cse-2">CSE-2</option>
@@ -123,13 +153,32 @@
                 class="col-sm-12 d-flex justify-content-center"
                 style="margin-top: 2%"
             >
-                <div
-                    class="input-group-append"
-                    style="background-color: #d3d3d3"
-                >
-                    <button class="btn btn-outline-secondary" type="submit">
+                <div class="input-group-append">
+                    <button
+                        class="btn"
+                        style="
+                            background-color: green;
+                            color: white;
+                            white-space: nowrap;
+                            margin-right: 4%;
+                        "
+                        type="submit"
+                    >
                         Get Results
                     </button>
+                    <a
+                        class="btn"
+                        href='downloads/{{ file_download_url }}'
+                        target="blank"
+                        style="
+                            background-color: brown;
+                            color: white;
+                            white-space: nowrap;
+                        "
+                        type="submit"
+                    >
+                        Download File
+                    </a>
                 </div>
             </div>
         </div>
@@ -200,11 +249,16 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% if report %} {% for student in report['present_data']
+                        %}
+
                         <tr>
-                            <th scope="row">1</th>
-                            <td>160117733142</td>
-                            <td>Susmitha Chinthareddy</td>
+                            <th scope="row">{{ student['sno'] }}</th>
+                            <td>{{ student['roll'] }}</td>
+                            <td>{{ student['name'] }}</td>
                         </tr>
+
+                        {% endfor %} {% endif %}
                     </tbody>
                 </table>
             </div>
@@ -218,16 +272,21 @@
                     <thead class="thead-dark">
                         <tr>
                             <th scope="col">#</th>
-                            <th scope="col">Absenties' Roll Number</th>
+                            <th scope="col">Roll Number</th>
                             <th scope="col">Name</th>
                         </tr>
                     </thead>
                     <tbody>
+                        {% if report %} {% for student in report['absent_data']
+                        %}
+
                         <tr>
-                            <th scope="row">1</th>
-                            <td>160117733142</td>
-                            <td>Susmitha Chinthareddy</td>
+                            <th scope="row">{{ student['sno'] }}</th>
+                            <td>{{ student['roll'] }}</td>
+                            <td>{{ student['name'] }}</td>
                         </tr>
+
+                        {% endfor %} {% endif %}
                     </tbody>
                 </table>
             </div>
@@ -245,10 +304,15 @@
                         </tr>
                     </thead>
                     <tbody>
+                        {% if report %} {% for student in report['unknown_data']
+                        %}
+
                         <tr>
-                            <th scope="row">1</th>
-                            <td>160117733142</td>
+                            <th scope="row">{{ student['sno'] }}</th>
+                            <td>{{ student['name'] }}</td>
                         </tr>
+
+                        {% endfor %} {% endif %}
                     </tbody>
                 </table>
             </div>
