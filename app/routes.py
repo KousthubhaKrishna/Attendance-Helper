@@ -82,7 +82,7 @@ def prepare_report(students_info,att_data):
 
 @app.route('/downloads/<filename>')
 def return_files_tut(filename):
-    file_download_url = "static\\downloads\\"+filename
+    file_download_url = os.path.join(app.config['DOWNLOADS_FOLDER'],filename)
     return send_file(file_download_url, as_attachment=True, attachment_filename='')
 
 
