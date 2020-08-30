@@ -150,8 +150,9 @@ secs=delta_t.total_seconds()
 
 def deleteChachedFiles():
     for file in os.listdir(app.config["DOWNLOADS_FOLDER"]):
-        fname = app.config["DOWNLOADS_FOLDER"]+str(file)
-        os.remove(fname)
+        if(str(file).endswith('.csv')):
+            fname = app.config["DOWNLOADS_FOLDER"]+str(file)
+            os.remove(fname)
         
 deleteChachedFiles()
 timer = Timer(secs, deleteChachedFiles)
