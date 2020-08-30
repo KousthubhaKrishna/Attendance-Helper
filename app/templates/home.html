@@ -59,7 +59,15 @@
 
 <!--Upload files and submit-->
 <div class="container-fluid">
-    <center><p style="margin-top:2%"> This tools extracts and gives you proper attendence from the Microsoft Teams attendance file. </p></center>
+    <center>
+        <p style="margin-top: 2%">
+            This tools extracts and gives you proper attendence from the
+            Microsoft Teams attendance file.
+        </p>
+        <p style="margin-top: 0%">
+            <b>Note:</b> Absent List will also contain Guest Login users. Please edit their final attendance.
+        </p>
+    </center>
     <!--first row-->
     <form action="/" method="POST" enctype="multipart/form-data">
         <div
@@ -113,7 +121,7 @@
                     <select
                         class="custom-select"
                         name="year"
-                        id="inputGroupSelect01"
+                        id="year"
                         required
                     >
                         <option selected value="">Choose...</option>
@@ -122,6 +130,11 @@
                         <option value="3">3</option>
                         <option value="4">4</option>
                     </select>
+                    <script type="text/javascript">
+                        $(document).ready(function(){
+                            $('#year').change();
+                        });
+                    </script>
                 </div>
             </div>
             <div class="col-sm-4">
@@ -131,24 +144,61 @@
                             class="input-group-text mytheme"
                             style="color: cornsilk"
                             for="inputGroupSelect01"
-                            >Section</label
+                            >Branch</label
                         >
                     </div>
                     <select
                         class="custom-select"
-                        name="section"
-                        id="inputGroupSelect02"
+                        name="branch"
+                        id="branch"
                         required
                     >
                         <option selected value="">Choose...</option>
-                        <option value="cse-1">CSE-1</option>
-                        <option value="cse-2">CSE-2</option>
-                        <option value="cse-3">CSE-3</option>
+                        <option value="cse">CSE</option>
+                        <option value="ece">ECE</option>
+                        <option value="it">IT</option>
                     </select>
                 </div>
             </div>
         </div>
         <!--second row-->
+        <div
+            class="row"
+            style="margin-top: 2%; margin-left: 8%; margin-right: 8%"
+        >
+            <div class="col-sm-12 justify-content-right">
+                <div class="input-group mb-3">
+                    <!--choice buttons-->
+                    <div class="input-group-prepend" style="margin-right: 3%">
+                        <label
+                            class="input-group-text"
+                            style="background-color: #333333; color: cornsilk"
+                            for="inputGroupSelect01"
+                            >Section</label
+                        >
+                    </div>
+                    <div class="form-check form-check-inline" required>
+                        <input name="section" value="1" type="checkbox" aria-label="1"/>&nbsp; 1 &nbsp;
+                        <input name="section" value="2" type="checkbox" aria-label="2"/>&nbsp; 2 &nbsp;
+                        <input name="section" value="3" type="checkbox" aria-label="3"/>&nbsp; 3 &nbsp;
+                    </div>
+                        
+                    <!--Elective Dropdown List-->
+                    <div class="input-group-prepend" style="margin-left: 4%">
+                        <label
+                            class="input-group-text"
+                            style="background-color: #333333; color: cornsilk"
+                            for="inputGroupSelect01"
+                            >Choose Subject</label
+                        >
+                    </div>
+                    <select class="custom-select" name= "subject" id="subject" required>
+                        <option selected value="">Choose...</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+        <!--third row-->
         <div class="row">
             <div
                 class="col-sm-12 d-flex justify-content-center"
@@ -170,7 +220,7 @@
                     {% if file_download_url %}
                     <a
                         class="btn"
-                        href='downloads/{{ file_download_url }}'
+                        href="downloads/{{ file_download_url }}"
                         target="blank"
                         style="
                             background-color: brown;
@@ -323,11 +373,48 @@
     </div>
 </div>
 
-<footer class="footer" style="padding:10px;position: relative;bottom: 0; width: 100%;">
-    <div class="container" style="text-align-last: right;">
-          <p style="color:lightslategray; font-size: 14px;"> Made by : 
-            <a href = "mailto: chkousthubha@gmail.com"> @kousthubha </a> 
-            <a href = "mailto: chkousthubha@gmail.com"> @susmitha </a>
+<footer
+    class="footer"
+    style="padding: 10px; position: relative; bottom: 0; width: 100%"
+>
+    <div class="container" style="text-align-last: right">
+        <p style="color: lightslategray; font-size: 14px">
+            Made by :
+            <a href="mailto: chkousthubha@gmail.com"> @C3_4/4 </a>
         </p>
     </div>
-  </footer>
+</footer>
+
+<script>
+const list_of_subjects = []
+{% for subj in list_of_subjects %}
+    list_of_subjects.push({'ename':'{{subj.ename}}','eid':'{{subj.eid}}','branch':'{{subj.branch}}','year':'{{subj.year}}'});
+{% endfor %}
+
+$(document).ready(function(){
+        $('#branch').change(function(){
+            $('#subject').html('');
+            $('#subject').append('<option value="" selected>Choose...</option>');
+            $('#subject').append('<option value="-1">Common Subject</option>');
+            var year = document.getElementById("year").value;
+            var branch = document.getElementById("branch").value;
+            for(subj of list_of_subjects){
+                if(subj.year == year && subj.branch==branch){
+                    $('#subject').append('<option value='+ subj.eid +'> '+ subj.ename+' </option>');
+                }
+            }
+        });
+        $('#year').change(function(){
+            $('#subject').html('');
+            $('#subject').append('<option value="" selected>Choose...</option>');
+            $('#subject').append('<option value="-1"> Common Subject </option>');
+            var year = document.getElementById("year").value;
+            var branch = document.getElementById("branch").value;
+            for(subj of list_of_subjects){
+                if(subj.year == year && subj.branch==branch){
+                    $('#subject').append('<option value='+ subj.eid +'> '+ subj.ename+' </option>');
+                }
+            }
+        });
+});
+</script>
