@@ -23,7 +23,7 @@ def home():
             students_info = Student.objects(branch=branch,year=year,section__in = section_list).order_by('roll')
             elective_students_list = []
             if(subject != "-1"):
-                elective_students_list = Elective_students.objects.get(eid=int(subject)).students_list
+                elective_students_list = Elective_students.objects.get(eid=subject).students_list
 
             #Load the uploaded file, save, read and delete after work 
             uploaded_file = request.files['file']
