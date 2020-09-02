@@ -238,7 +238,6 @@
     </form>
 </div>
 <div class="container-fluid">
-    <!---third row-->
     <div
         class="row"
         style="
@@ -299,6 +298,7 @@
                             <th scope="col">#</th>
                             <th scope="col">Roll Number</th>
                             <th scope="col">Name</th>
+                            <th scope="col">Time (mins)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -309,6 +309,7 @@
                             <th scope="row">{{ student['sno'] }}</th>
                             <td>{{ student['roll'] }}</td>
                             <td>{{ student['name'] }}</td>
+                            <td>{{ student['time'] }}</td>
                         </tr>
 
                         {% endfor %} {% endif %}
@@ -354,6 +355,7 @@
                         <tr>
                             <th scope="col">#</th>
                             <th scope="col">Guest Logins</th>
+                            <th scope="col">Time (mins)</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -363,6 +365,7 @@
                         <tr>
                             <th scope="row">{{ student['sno'] }}</th>
                             <td>{{ student['name'] }}</td>
+                            <td>{{ student['time'] }}</td>
                         </tr>
 
                         {% endfor %} {% endif %}
