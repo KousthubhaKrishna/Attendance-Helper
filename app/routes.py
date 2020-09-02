@@ -61,8 +61,10 @@ def home():
 
 
 def prepare_report(students_info,att_data):
-    present_set = set([x[:20] for x in att_data["Full Name"]])
+    present_set = set([x[:] for x in att_data["Full Name"]])
     present_data,absent_data,unknown_data = [],[],[]
+
+    total_time = get_total_present_time(att_data)
 
     pc,ac = 1,1
     total_sheet = []
@@ -70,21 +72,25 @@ def prepare_report(students_info,att_data):
     i = 1
     for index, student in enumerate(students_info):
         roll, name = student.roll, student.name[:20]
+        display_name = student.name[:]
 
-        if( name in present_set ):
-            present_data.append({ "sno":pc, "roll":roll,"name":name })
-            present_set.remove(name)
-            pc += 1
-            total_sheet.append([i,roll,name,1])
+        for j in present_set:
+            if( name == j[:20] ):
+                present_data.append({ "sno":pc, "roll":roll,"name":display_name,"time":total_time[j]}) 
+                present_set.remove(j)
+                pc += 1                                                                                 
+                total_sheet.append([i,roll,display_name,1])                                                                                                                                      
+                break                                                                                   
+                                                                                                        
         else:
-            absent_data.append({ "sno":ac, "roll":roll,"name":name})
+            absent_data.append({ "sno":ac, "roll":roll,"name":display_name})
             ac += 1
-            total_sheet.append([i,roll,name,0])
+            total_sheet.append([i,roll,display_name,0])
         i += 1
         
     total_sheet = pd.DataFrame(total_sheet,columns=['Sno','Roll','Name','Status'])
     unknown_data = list(present_set)
-    unknown_data = [{"sno":i+1,"name":unknown_data[i]} for i in range(len(unknown_data))]
+    unknown_data = [{"sno":i+1,"name":unknown_data[i],"time":total_time[unknown_data[i]]} for i in range(len(unknown_data))]
     report = {
         "present_data":present_data,
         "absent_data":absent_data,
@@ -96,31 +102,36 @@ def prepare_report(students_info,att_data):
 
 def prepare_report_for_electives(students_info,elective_students_list,att_data):
     elective_students_set = set([x[:15] for x in elective_students_list])
-    present_set = set([x[:20] for x in att_data["Full Name"]])
+    present_set = set([x[:] for x in att_data["Full Name"]])
     present_data,absent_data,unknown_data = [],[],[]
 
+    total_time = get_total_present_time(att_data)
     pc,ac = 1,1
     total_sheet = []
 
     i = 1
     for index, student in enumerate(students_info):
         roll, name = student.roll[:15], student.name[:20]
+        display_name = student.name[:]
 
         if(roll in elective_students_set):
-            if( name in present_set ):
-                present_data.append({ "sno":pc, "roll":roll,"name":name })
-                present_set.remove(name)
-                pc += 1
-                total_sheet.append([i,roll,name,1])
+            for j in present_set:
+                if( name == j[:20] ):
+                    present_data.append({ "sno":pc, "roll":roll,"name":display_name,"time":total_time[j]}) 
+                    present_set.remove(j)
+                    pc += 1                                                                                 
+                    total_sheet.append([i,roll,display_name,1])                                                                                                                                      
+                    break                                                                                   
+                                                                                                        
             else:
-                absent_data.append({ "sno":ac, "roll":roll,"name":name})
+                absent_data.append({ "sno":ac, "roll":roll,"name":display_name})
                 ac += 1
-                total_sheet.append([i,roll,name,0])
+                total_sheet.append([i,roll,display_name,0])
             i += 1
         
     total_sheet = pd.DataFrame(total_sheet,columns=['Sno','Roll','Name','Status'])
     unknown_data = list(present_set)
-    unknown_data = [{"sno":i+1,"name":unknown_data[i]} for i in range(len(unknown_data))]
+    unknown_data = [{"sno":i+1,"name":unknown_data[i],"time":total_time[unknown_data[i]]} for i in range(len(unknown_data))]
     report = {
         "present_data":present_data,
         "absent_data":absent_data,
@@ -130,7 +141,32 @@ def prepare_report_for_electives(students_info,elective_students_list,att_data):
     return report
 
 
-
+def get_total_present_time(att_data):
+    cur_status = dict()
+    total_time = dict()
+    check = att_data.values.tolist()
+    fmt = '%m/%d/%Y, %H:%M:%S'
+    end_time = datetime.strptime(check[0][2][:-3], fmt)
+    end_time = end_time + timedelta(hours=1)
+    for i in range(len(check)):
+        name,status,timestamp = check[i][0],check[i][1],check[i][2]
+        status = status[:6]
+        if status=="Joined":
+            if cur_status.get(name)==None:
+                total_time[name]= 0
+            cur_status[name]=timestamp[:-3]
+        else:
+            val = datetime.strptime(timestamp[:-3], fmt) - datetime.strptime(cur_status[name], fmt)
+            val = int(round(val.total_seconds()/60))
+            total_time[name] += val
+            cur_status[name]='0'
+    for i in cur_status:
+        if cur_status[i]!='0':
+            val = end_time - datetime.strptime(cur_status[i], fmt)
+            total_time[i] += int(round(val.total_seconds()/60)) 
+            cur_status[i] = '0'
+    print(total_time)
+    return total_time
 
 @app.route('/downloads/<filename>')
 def return_files_tut(filename):
